@@ -19,7 +19,9 @@
     --shadow: 0 4px 20px rgba(0,0,0,0.12);
     --radius: 20px;
   }
-  body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
+  body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; 
+       zoom: 0.9; /* Reduz a página inteira em exatamente 10% */
+       }
 
   .sky-bg { position: fixed; inset: 0; background: linear-gradient(180deg, #87CEEB 0%, #B8E4F9 50%, #E8F4FD 100%); z-index: 0; pointer-events: none; }
   .cloud { position: absolute; background: rgba(255,255,255,0.85); border-radius: 50px; animation: float-cloud linear infinite; }
