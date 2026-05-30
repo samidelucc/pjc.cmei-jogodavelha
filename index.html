@@ -229,49 +229,98 @@ function goToGame() {
   document.getElementById('game-screen').classList.add('active');
   initTicTac();
 }
+
 function goToHome() {
   document.getElementById('game-screen').classList.remove('active');
   document.getElementById('home-screen').classList.add('active');
 }
 
-let tttBoard=Array(9).fill(''), tttCurrent='X', tttScores={X:0,O:0,D:0}, tttOver=false;
-const WINS=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+// Retiramos o Array.fill() que navegadores antigos não leem
+var tttBoard = ['', '', '', '', '', '', '', '', ''];
+var tttCurrent = 'X';
+var tttScores = {X: 0, O: 0, D: 0};
+var tttOver = false;
+var WINS = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
 
 function initTicTac() {
-  tttBoard=Array(9).fill(''); tttCurrent='X'; tttOver=false;
+  tttBoard = ['', '', '', '', '', '', '', '', ''];
+  tttCurrent = 'X';
+  tttOver = false;
   renderTicTac();
-  document.getElementById('ttt-status').textContent='Vez do Jogador X';
+  document.getElementById('ttt-status').textContent = 'Vez do Jogador X';
 }
+
 function renderTicTac() {
-  const board=document.getElementById('ttt-board');
-  const winCombo=checkWin(tttBoard);
-  board.innerHTML='';
-  tttBoard.forEach((val,i)=>{
-    const cell=document.createElement('div');
-    cell.className='ttt-cell'+(val?' taken':'')+(val==='X'?' x-cell':val==='O'?' o-cell':'');
-    if(winCombo&&winCombo.includes(i)) cell.classList.add('win-cell');
-    cell.textContent=val||'';
-    cell.addEventListener('click',()=>tttMove(i));
+  var board = document.getElementById('ttt-board');
+  var winCombo = checkWin(tttBoard);
+  board.innerHTML = '';
+  
+  // Trocamos as arrow functions (=>) por funções clássicas
+  tttBoard.forEach(function(val, i) {
+    var cell = document.createElement('div');
+    
+    // Trocamos o .includes() por .indexOf()
+    var isWinCell = winCombo && winCombo.indexOf(i) !== -1;
+    
+    cell.className = 'ttt-cell' + (val ? ' taken' : '') + (val === 'X' ? ' x-cell' : val === 'O' ? ' o-cell' : '');
+    if (isWinCell) cell.classList.add('win-cell');
+    
+    cell.textContent = val || '';
+    
+    cell.addEventListener('click', function() { 
+      tttMove(i); 
+    });
+    
     board.appendChild(cell);
   });
-  document.getElementById('score-x').textContent=tttScores.X;
-  document.getElementById('score-o').textContent=tttScores.O;
-  document.getElementById('score-d').textContent=tttScores.D;
+  
+  document.getElementById('score-x').textContent = tttScores.X;
+  document.getElementById('score-o').textContent = tttScores.O;
+  document.getElementById('score-d').textContent = tttScores.D;
 }
+
 function tttMove(i) {
-  if(tttOver||tttBoard[i]) return;
-  tttBoard[i]=tttCurrent;
-  const winner=checkWin(tttBoard);
-  if(winner){ tttOver=true; tttScores[tttCurrent]++; document.getElementById('ttt-status').textContent=`🎉 Jogador ${tttCurrent} venceu!`; renderTicTac(); return; }
-  if(tttBoard.every(c=>c!=='')){ tttOver=true; tttScores.D++; document.getElementById('ttt-status').textContent='🤝 Empate!'; renderTicTac(); return; }
-  tttCurrent=tttCurrent==='X'?'O':'X';
-  document.getElementById('ttt-status').textContent=`Vez do Jogador ${tttCurrent}`;
+  if(tttOver || tttBoard[i]) return;
+  tttBoard[i] = tttCurrent;
+  var winner = checkWin(tttBoard);
+  
+  if(winner) { 
+    tttOver = true; 
+    tttScores[tttCurrent]++; 
+    // Trocamos as crases (template literals) por concatenação simples
+    document.getElementById('ttt-status').textContent = '🎉 Jogador ' + tttCurrent + ' venceu!'; 
+    renderTicTac(); 
+    return; 
+  }
+  
+  var isDraw = tttBoard.every(function(c) { return c !== ''; });
+  if(isDraw) { 
+    tttOver = true; 
+    tttScores.D++; 
+    document.getElementById('ttt-status').textContent = '🤝 Empate!'; 
+    renderTicTac(); 
+    return; 
+  }
+  
+  tttCurrent = tttCurrent === 'X' ? 'O' : 'X';
+  document.getElementById('ttt-status').textContent = 'Vez do Jogador ' + tttCurrent;
   renderTicTac();
 }
+
 function checkWin(board) {
-  for(const combo of WINS){ const[a,b,c]=combo; if(board[a]&&board[a]===board[b]&&board[a]===board[c]) return combo; }
+  // Retiramos o for...of e a desestruturação
+  for(var i = 0; i < WINS.length; i++) { 
+    var combo = WINS[i];
+    var a = combo[0];
+    var b = combo[1];
+    var c = combo[2];
+    if(board[a] && board[a] === board[b] && board[a] === board[c]) {
+      return combo; 
+    }
+  }
   return null;
 }
+
 </script>
 </body>
 </html>
